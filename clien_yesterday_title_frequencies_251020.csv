@@ -1,0 +1,41 @@
+﻿Type,Token,Count
+word,부동산,5
+word,보유세,5
+word,대통령,5
+word,코스피,5
+word,캄보디아,4
+word,미국,4
+word,중,4
+word,민주당,4
+word,이재명,4
+word,이유,4
+word,대법관,4
+word,jpg,3
+word,발칵,3
+word,로이터,3
+word,또,3
+word,서울,3
+word,사실,3
+word,의혹,3
+word,4,3
+word,가능,3
+bigram,최대 5배,3
+bigram,허위조작정보 개념,2
+bigram,개념 신설,2
+bigram,신설 언론,2
+bigram,언론 최대,2
+bigram,5배 징벌,2
+bigram,징벌 배상,2
+bigram,빌보드 핫,2
+bigram,핫 100,2
+bigram,이재명 대통령,2
+bigram,코스피 사상,2
+bigram,은퇴 가능,2
+bigram,백사자들이 태어났네요,1
+bigram,통역 일하러,1
+bigram,일하러 캄보디아,1
+bigram,캄보디아 간,1
+bigram,간 여성,1
+bigram,여성 성인방송,1
+bigram,성인방송 강요하며,1
+bigram,강요하며 감금,1
