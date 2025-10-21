@@ -1,41 +1,41 @@
 ﻿Type,Token,Count
-word,대통령,3
+word,조희대,5
+word,트럼프,4
+word,대통령,4
+word,4,3
+word,전세,3
+word,코스피,3
+word,부모님,3
+word,이재명,3
+word,단독,3
 word,aws,3
-word,가격은,2
-word,이유,2
-word,1,2
-word,차관,2
-word,이재명,2
-word,코스피,2
-word,곧,2
-word,든,2
-word,파는,2
-word,kospi,2
-word,내란,2
-word,단독,2
-word,근황,2
-word,트럼프,2
-word,온,2
-word,유튜브에서,1
-word,그런말은,1
-word,봤네요,1
-bigram,이재명 대통령,2
-bigram,유튜브에서 그런말은,1
-bigram,그런말은 봤네요,1
-bigram,봤네요 우리나라,1
-bigram,우리나라 부동산,1
-bigram,부동산 가격은,1
-bigram,드디어 내일,1
-bigram,내일 이사,1
-bigram,이사 갑니다,1
-bigram,기본적으로 부동산은,1
-bigram,부동산은 부채,1
-bigram,부채 사이클입니다,1
-bigram,10년 경력의,1
-bigram,경력의 투자자가,1
-bigram,투자자가 곱버스,1
-bigram,곱버스 몰빵한,1
-bigram,몰빵한 이유,1
-bigram,보유세 1,1
-bigram,1 차관,1
-bigram,차관 발언,1
+word,일부,2
+word,속보,2
+word,및,2
+word,국장,2
+word,미국,2
+word,요즘,2
+word,사람은,2
+word,일본,2
+word,거,2
+word,있어요,2
+bigram,이재명 대통령,3
+bigram,조희대 조희대,2
+bigram,과즙세연 뻑가,1
+bigram,뻑가 상대,1
+bigram,상대 손배소,1
+bigram,손배소 일부,1
+bigram,일부 승소,1
+bigram,승소 1천만,1
+bigram,1천만 원,1
+bigram,원 배상,1
+bigram,배상 판결,1
+bigram,속보 다카이치,1
+bigram,다카이치 사실상,1
+bigram,사실상 총리로,1
+bigram,총리로 선출,1
+bigram,선출 중의원,1
+bigram,중의원 1차투표,1
+bigram,1차투표 과반,1
+bigram,과반 득표,1
+bigram,임성근에게 기적이,1

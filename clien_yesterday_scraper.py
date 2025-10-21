@@ -2,6 +2,7 @@ import csv
 import re
 import sys
 
+import os
 from collections import Counter
 from pathlib import Path
 from urllib.parse import urljoin
@@ -11,6 +12,12 @@ try:
     from wordcloud import WordCloud
 except ImportError:
     WordCloud = None
+try:
+    import google.generativeai as genai
+except ImportError:
+    genai = None
+
+from dotenv import load_dotenv
 
 import requests
 from bs4 import BeautifulSoup
@@ -23,12 +30,25 @@ DEFAULT_HEADERS: Dict[str, str] = {
         "(KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
     )
 }
-REQUEST_TIMEOUT = 10
-TELEGRAM_BOT_TOKEN = "1740157778:AAGb3Af539GwgNeJWWORwgPL4CWjzzfgvtE"
-TELEGRAM_CHAT_ID = "168334304"
+REQUEST_TIMEOUT = 10 # seconds
+
+# Load environment variables from .env file first
+load_dotenv()
+
+# Sensitive API keys and tokens should be loaded from environment variables
+# For local development, consider using python-dotenv to load from a .env file
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "YOUR_TELEGRAM_BOT_TOKEN_HERE")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "YOUR_TELEGRAM_CHAT_ID_HERE")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "YOUR_GEMINI_API_KEY_HERE")
 
 # 키워드 빈도 분석에서 제외할 불용어 목록
 STOP_WORDS = {"속보", "단독", "합니다", "더", "첫", "수"}
+
+GEMINI_SUMMARY_PROMPT = (
+    "다음은 커뮤니티의 주요 이슈 게시물들을 모아놓은 텍스트입니다. "
+    "전체 내용을 핵심만 간추려 3~5 문장의 완성된 문단으로 요약해주세요.\n\n"
+    "---[원문]---\n"
+)
 
 
 def scrape_clien_yesterday_posts():
@@ -359,6 +379,33 @@ def generate_word_cloud(
         return False, f"워드 클라우드 생성 중 오류가 발생했습니다: {exc}"
 
 
+def summarize_text_with_gemini(
+    text_to_summarize: str, api_key: str
+) -> Tuple[Optional[str], Optional[str]]:
+    """
+    Summarize the given text using the Gemini API.
+    """
+    if genai is None:
+        return None, "google-generativeai 라이브러리가 설치되지 않았습니다."
+
+    if not api_key or api_key == "YOUR_GEMINI_API_KEY":
+        return None, "Gemini API 키가 설정되지 않았습니다."
+
+    try:
+        genai.configure(api_key=api_key)
+        # model = genai.GenerativeModel("gemini-1.5-flash-latest")
+        # 'gemini-1.5-flash-latest' 대신 'gemini-1.5-flash' 사용
+        model = genai.GenerativeModel('gemini-2.5-flash')
+
+        prompt = f"{GEMINI_SUMMARY_PROMPT}{text_to_summarize}"
+
+        response = model.generate_content(prompt)
+        return response.text, None
+
+    except Exception as e:
+        return None, f"Gemini API 호출 중 오류가 발생했습니다: {e}"
+
+
 if __name__ == "__main__":
     def safe_console_text(text: str) -> str:
         encoding = sys.stdout.encoding or "utf-8"
@@ -426,6 +473,37 @@ if __name__ == "__main__":
                         )
                     elif send_error:
                         print(safe_console_text(f"\n{send_error}"))
+
+                    # Gemini 요약 및 전송 로직 추가
+                    full_issue_content = issue_file_path.read_text(encoding="utf-8")
+                    summary, gemini_error = summarize_text_with_gemini(full_issue_content, GEMINI_API_KEY)
+
+                    if summary:
+                        summary_file_path = Path(__file__).with_name(
+                            f"YESTERDAY_SUMMARY_{date_suffix}.txt"
+                        )
+                        summary_file_path.write_text(summary, encoding="utf-8")
+                        print(safe_console_text(f"\nSaved Gemini summary to {summary_file_path.resolve()}"))
+
+                        # 요약 파일을 텔레그램으로 전송
+                        sent_summary, summary_error = send_file_via_telegram(
+                            summary_file_path,
+                            TELEGRAM_BOT_TOKEN,
+                            TELEGRAM_CHAT_ID,
+                            caption=f"Gemini Summary for yesterday's top keyword: {top_keyword}",
+                        )
+                        if sent_summary:
+                            print(
+                                safe_console_text(
+                                    "\nSent YESTERDAY summary text file to Telegram successfully."
+                                )
+                            )
+                        elif summary_error:
+                            print(safe_console_text(f"\n{summary_error}"))
+
+                    elif gemini_error:
+                        print(safe_console_text(f"\nGemini summarization failed: {gemini_error}"))
+
                 else:
                     print(
                         safe_console_text(
