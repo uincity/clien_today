@@ -1,0 +1,41 @@
+﻿Type,Token,Count
+word,대통령,3
+word,aws,3
+word,가격은,2
+word,이유,2
+word,1,2
+word,차관,2
+word,이재명,2
+word,코스피,2
+word,곧,2
+word,든,2
+word,파는,2
+word,kospi,2
+word,내란,2
+word,단독,2
+word,근황,2
+word,트럼프,2
+word,온,2
+word,유튜브에서,1
+word,그런말은,1
+word,봤네요,1
+bigram,이재명 대통령,2
+bigram,유튜브에서 그런말은,1
+bigram,그런말은 봤네요,1
+bigram,봤네요 우리나라,1
+bigram,우리나라 부동산,1
+bigram,부동산 가격은,1
+bigram,드디어 내일,1
+bigram,내일 이사,1
+bigram,이사 갑니다,1
+bigram,기본적으로 부동산은,1
+bigram,부동산은 부채,1
+bigram,부채 사이클입니다,1
+bigram,10년 경력의,1
+bigram,경력의 투자자가,1
+bigram,투자자가 곱버스,1
+bigram,곱버스 몰빵한,1
+bigram,몰빵한 이유,1
+bigram,보유세 1,1
+bigram,1 차관,1
+bigram,차관 발언,1

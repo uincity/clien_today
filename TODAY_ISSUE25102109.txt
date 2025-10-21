@@ -1,0 +1,33 @@
+Top keyword: aws
+
+[Post 1]
+Title: aws 복구됐다는데 vercel은 6시간 넘게 먹통…
+URL: https://www.clien.net/service/board/park/19081522?od=T31&po=0&category=0&groupCd=
+Rec 0 / Views 1290 / Author Kaya / Time 08:01
+
+배포쪽과 대시보드가 맛이 갔네요.
+앱업데이트 해야하는데 ㅠㅠ
+
+--------------------------------------------------------------------------------
+
+[Post 2]
+Title: AWS 이번에 장애로 알게된 좀 병맛같은 상황이 일부 주요서비스는
+URL: https://www.clien.net/service/board/park/19081518?od=T31&po=0&category=0&groupCd=
+Rec 6 / Views 2776 / Author 벤또사마닷넷 / Time 07:52
+
+북부 버지니아에 종속(?)적이네요
+한국리전이라도 IAM는 서비스가 영향을 받고
+클라우드 프론트나 WAF는 글로벌 서비스인데
+이 글로벌 리전이 북부 버지니아라
+서비스는 되더라도 통계 데이터가 없네요
+고객들 서비스는 이중화 하라고 난리치면서
+지들 서비스는 단일 구성인 패기 아주 좋습니다
+
+--------------------------------------------------------------------------------
+
+[Post 3]
+Title: AWS 맛탱이 가니 안되는게 많군요.
+URL: https://www.clien.net/service/board/park/19081492?od=T31&po=1&category=0&groupCd=
+Rec 1 / Views 3825 / Author memory / Time 04:45
+
+전 일을 못하겠네요. 넷플은 문제없나요? ㅋㅋ

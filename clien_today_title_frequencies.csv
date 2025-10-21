@@ -1,0 +1,41 @@
+﻿Type,Token,Count
+word,aws,3
+word,곧,2
+word,든,2
+word,파는,2
+word,kospi,2
+word,대통령,2
+word,내란,2
+word,단독,2
+word,근황,2
+word,트럼프,2
+word,온,2
+word,코스피,1
+word,떨어질,1
+word,수,1
+word,있어요,1
+word,2찍이들,1
+word,인버스,1
+word,많이,1
+word,탔을,1
+word,텐데,1
+bigram,코스피 곧,1
+bigram,곧 떨어질,1
+bigram,떨어질 수,1
+bigram,수 있어요,1
+bigram,2찍이들 인버스,1
+bigram,인버스 많이,1
+bigram,많이 탔을,1
+bigram,탔을 텐데,1
+bigram,50만닉스 찍었네요,1
+bigram,왜 납이,1
+bigram,납이 든,1
+bigram,든 요구르트를,1
+bigram,요구르트를 파는,1
+bigram,파는 걸까요,1
+bigram,걸까요 미국에서,1
+bigram,미국에서 파는,1
+bigram,파는 한국산,1
+bigram,한국산 요구르트,1
+bigram,전현희 나경원,1
+bigram,나경원 방지법,1
