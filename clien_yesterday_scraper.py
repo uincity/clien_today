@@ -345,6 +345,39 @@ def send_file_via_telegram(
         return False, f"텔레그램 요청 중 오류가 발생했습니다: {exc}"
 
 
+def send_photo_via_telegram(
+    file_path: Path,
+    token: str,
+    chat_id: str,
+    caption: Optional[str] = None,
+) -> Tuple[bool, Optional[str]]:
+    """
+    Send a local image file to Telegram using the bot API's sendPhoto.
+    """
+    if not file_path.exists():
+        return False, f"파일이 존재하지 않습니다: {file_path}"
+
+    if not token or "YOUR_TELEGRAM_BOT_TOKEN" in token:
+        return False, "텔레그램 봇 토큰이 설정되지 않았습니다."
+
+    if not chat_id or "YOUR_TELEGRAM_CHAT_ID" in chat_id:
+        return False, "텔레그램 chat_id가 설정되지 않았습니다."
+
+    url = f"https://api.telegram.org/bot{token}/sendPhoto"
+
+    try:
+        with file_path.open("rb") as file_obj:
+            response = requests.post(
+                url,
+                data={"chat_id": chat_id, "caption": caption or ""},
+                files={"photo": file_obj},
+                timeout=REQUEST_TIMEOUT,
+            )
+        return response.ok, response.text if not response.ok else None
+    except requests.exceptions.RequestException as exc:
+        return False, f"텔레그램 사진 전송 중 오류가 발생했습니다: {exc}"
+
+
 def generate_word_cloud(
     word_freq: List[Tuple[str, int]],
     image_path: Path,
@@ -555,6 +588,21 @@ if __name__ == "__main__":
                         "한글 폰트를 찾지 못해 기본 폰트로 생성했습니다. 글자가 깨지면 `generate_word_cloud` 호출 시 `font_path`를 지정해주세요."
                     )
                 )
+            # 생성된 워드 클라우드 이미지를 텔레그램으로 전송
+            sent_wc, wc_error = send_photo_via_telegram(
+                word_cloud_path,
+                TELEGRAM_BOT_TOKEN,
+                TELEGRAM_CHAT_ID,
+                caption=f"Clien yesterday({date_suffix}) top keywords word cloud",
+            )
+            if sent_wc:
+                print(
+                    safe_console_text(
+                        "\nSent word cloud image to Telegram successfully."
+                    )
+                )
+            elif wc_error:
+                print(safe_console_text(f"\n{wc_error}"))
         elif error_message:
             print(safe_console_text(f"\n{error_message}"))
     else:
