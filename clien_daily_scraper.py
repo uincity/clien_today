@@ -1,8 +1,9 @@
 import csv
 import re
 import sys
-import os
+import argparse
 
+import os
 from collections import Counter
 from pathlib import Path
 from urllib.parse import urljoin
@@ -21,7 +22,7 @@ from dotenv import load_dotenv
 
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # 클리앙 요청 시 사용할 공통 HTTP 헤더(봇 차단 방지를 위해 브라우저 UA 지정)
 DEFAULT_HEADERS: Dict[str, str] = {
@@ -36,6 +37,7 @@ REQUEST_TIMEOUT = 10 # seconds
 load_dotenv()
 
 # Sensitive API keys and tokens should be loaded from environment variables
+# For local development, consider using python-dotenv to load from a .env file
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "YOUR_TELEGRAM_BOT_TOKEN_HERE")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "YOUR_TELEGRAM_CHAT_ID_HERE")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "YOUR_GEMINI_API_KEY_HERE")
@@ -50,14 +52,14 @@ GEMINI_SUMMARY_PROMPT = (
 )
 
 
-def scrape_clien_today_posts():
+def scrape_clien_posts_for_date(target_date: datetime.date):
     """
-    Scrape today's posts from Clien's 'Today' board, including metadata fields.
+    Scrape posts for a specific date from Clien's 'Today' board.
     """
     base_url = "https://www.clien.net/service/board/park"
     page_num = 0
-    today_posts = []
-
+    target_date_posts = []
+    
     def normalize_count(value: str) -> int:
         digits = "".join(ch for ch in value if ch.isdigit())
         return int(digits) if digits else 0
@@ -86,8 +88,7 @@ def scrape_clien_today_posts():
             print("No posts were returned for the current page. Stopping.")
             break
 
-        today = datetime.now().date()
-        found_today_post_on_page = False
+        found_target_date_post_on_page = False
 
         for post in post_list:
             timestamp_span = post.select_one("div.list_time span.timestamp")
@@ -101,10 +102,15 @@ def scrape_clien_today_posts():
                 # Unexpected timestamp format; skip this post.
                 continue
 
-            if post_datetime.date() != today:
-                continue
+            post_date = post_datetime.date()
 
-            found_today_post_on_page = True
+            if post_date < target_date:
+                print(f"Found posts older than {target_date.strftime('%Y-%m-%d')} on page {page_num}. Stopping.")
+                return target_date_posts
+            elif post_date != target_date:
+                continue
+            
+            found_target_date_post_on_page = True
 
             title_span = post.select_one("span.subject_fixed")
             like_span = post.select_one("div.list_symph span")
@@ -124,7 +130,7 @@ def scrape_clien_today_posts():
             )
             url = urljoin(base_url, link_tag["href"]) if link_tag and link_tag.has_attr("href") else ""
 
-            today_posts.append(
+            target_date_posts.append(
                 {
                     "title": title,
                     "recommendations": recommendations,
@@ -136,14 +142,14 @@ def scrape_clien_today_posts():
                 }
             )
 
-        if not found_today_post_on_page:
-            print(f"No more posts from today found on page {page_num}. Stopping.")
-            break
+        # 현재 페이지에서 어제 게시물을 하나라도 찾았고, 다음 페이지로 넘어가도 어제 게시물이 없을 수 있으므로
+        # 무조건 중단하지 않고 계속 페이징합니다. 중단은 post_date < target_date 조건에서 처리됩니다.
+        if not found_target_date_post_on_page and page_num > 0: # 첫 페이지 이후에 대상일 게시물이 없으면 계속 탐색
+            print(f"No posts from {target_date.strftime('%Y-%m-%d')} found on page {page_num}. Continuing to next page.")
 
         print(f"Completed scraping page {page_num}.")
         page_num += 1
-
-    return today_posts
+    return target_date_posts
 
 
 def tokenize_title(title: str) -> List[str]:
@@ -415,12 +421,14 @@ def summarize_text_with_gemini(
     if genai is None:
         return None, "google-generativeai 라이브러리가 설치되지 않았습니다."
 
-    if not api_key or "YOUR_GEMINI_API_KEY" in api_key:
+    if not api_key or api_key == "YOUR_GEMINI_API_KEY":
         return None, "Gemini API 키가 설정되지 않았습니다."
 
     try:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-2.5-flash")
+        # model = genai.GenerativeModel("gemini-1.5-flash-latest")
+        # 'gemini-1.5-flash-latest' 대신 'gemini-1.5-flash' 사용
+        model = genai.GenerativeModel('gemini-2.5-flash')
 
         prompt = f"{GEMINI_SUMMARY_PROMPT}{text_to_summarize}"
 
@@ -432,33 +440,48 @@ def summarize_text_with_gemini(
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="클리앙 특정 날짜의 게시물을 스크래핑합니다.")
+    parser.add_argument(
+        "--date",
+        type=str,
+        help="스크래핑할 날짜 (YYYY-MM-DD 형식). 기본값: 어제",
+        default=(datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+    )
+    args = parser.parse_args()
+
+    try:
+        target_date = datetime.strptime(args.date, "%Y-%m-%d").date()
+    except ValueError:
+        print("오류: 날짜 형식이 잘못되었습니다. YYYY-MM-DD 형식으로 입력해주세요.")
+        sys.exit(1)
+
     def safe_console_text(text: str) -> str:
         encoding = sys.stdout.encoding or "utf-8"
         return text.encode(encoding, errors="replace").decode(encoding, errors="replace")
 
-    print(safe_console_text("Starting Clien 'Today' board scraper."))
+    print(safe_console_text(f"Starting Clien board scraper for {target_date.strftime('%Y-%m-%d')}."))
 
     # 1) 오늘 게시글 크롤링 후 2) 통계/파일 생성 3) 텔레그램 전송
-    posts = scrape_clien_today_posts()
+    posts = scrape_clien_posts_for_date(target_date)
 
     if posts:
-        print(safe_console_text("\n--- Today's posts ---"))
+        print(safe_console_text(f"\n--- Posts from {target_date.strftime('%Y-%m-%d')} ---"))
         for i, post in enumerate(posts, 1):
             line = (
                 f"{i}. Rec {post['recommendations']} / Views {post['views']} / "
                 f"Author {post['author']} / Time {post['display_time']} / Title {post['title']}"
             )
             print(safe_console_text(line))
-        print(safe_console_text(f"\nCollected {len(posts)} posts in total."))
+        print(safe_console_text(f"\nCollected {len(posts)} posts from {target_date.strftime('%Y-%m-%d')} in total."))
 
         # 파일명 뒤에 날짜(YYMMDD)를 붙여 관리
-        date_suffix = datetime.now().strftime("%y%m%d")
+        date_suffix = target_date.strftime("%y%m%d")
         
         # ./data 디렉토리 생성
         output_dir = Path(__file__).parent / "data"
         output_dir.mkdir(exist_ok=True)
 
-        output_path = output_dir / f"clien_today_posts_{date_suffix}.csv"
+        output_path = output_dir / f"clien_yesterday_posts_{date_suffix}.csv"
         save_posts_to_csv(posts, output_path)
         print(safe_console_text(f"\nSaved CSV to {output_path}"))
 
@@ -474,7 +497,7 @@ if __name__ == "__main__":
             matching_posts = [
                 post for post in posts if top_keyword in tokenize_title(post["title"])
             ]
-            issue_file_path = output_dir / f"TODAY_ISSUE_{date_suffix}.txt"
+            issue_file_path = output_dir / f"CLIEAN_ISSUE_{date_suffix}.txt"
             if matching_posts:
                 # 필터링된 게시물 본문 저장 후 텔레그램 공유
                 if save_issue_posts(top_keyword, matching_posts, issue_file_path):
@@ -492,7 +515,7 @@ if __name__ == "__main__":
                     if sent:
                         print(
                             safe_console_text(
-                                "\nSent TODAY issue text file to Telegram successfully."
+                                f"\nSent {date_suffix} issue text file to Telegram successfully."
                             )
                         )
                     elif send_error:
@@ -503,7 +526,7 @@ if __name__ == "__main__":
                     summary, gemini_error = summarize_text_with_gemini(full_issue_content, GEMINI_API_KEY)
 
                     if summary:
-                        summary_file_path = output_dir / f"TODAY_SUMMARY_{date_suffix}.txt"
+                        summary_file_path = output_dir / f"CLIEAN_SUMMARY_{date_suffix}.txt"
                         summary_file_path.write_text(summary, encoding="utf-8")
                         print(safe_console_text(f"\nSaved Gemini summary to {summary_file_path}"))
 
@@ -512,12 +535,12 @@ if __name__ == "__main__":
                             summary_file_path,
                             TELEGRAM_BOT_TOKEN,
                             TELEGRAM_CHAT_ID,
-                            caption=f"Gemini Summary for today's top keyword: {top_keyword}",
+                            caption=f"Gemini Summary for {date_suffix}'s top keyword: {top_keyword}",
                         )
                         if sent_summary:
                             print(
                                 safe_console_text(
-                                    "\nSent TODAY summary text file to Telegram successfully."
+                                    f"\nSent {date_suffix} summary text file to Telegram successfully."
                                 )
                             )
                         elif summary_error:
@@ -544,7 +567,7 @@ if __name__ == "__main__":
             for token, count in bigram_freq:
                 print(safe_console_text(f"{token}: {count}"))
 
-        freq_output_path = output_dir / f"clien_today_title_frequencies_{date_suffix}.csv"
+        freq_output_path = output_dir / f"clien_title_frequencies_{date_suffix}.csv"
         save_title_frequencies_to_csv(word_freq, bigram_freq, freq_output_path)
         print(safe_console_text(f"\nSaved title frequencies to {freq_output_path}"))
         # 제목 빈도 CSV를 텔레그램으로 전송
@@ -552,7 +575,7 @@ if __name__ == "__main__":
             freq_output_path,
             TELEGRAM_BOT_TOKEN,
             TELEGRAM_CHAT_ID,
-            caption="Clien today title word frequencies",
+            caption=f"Clien {date_suffix} title word frequencies",
         )
         if sent_freq:
             print(safe_console_text("\nSent title frequencies CSV to Telegram successfully."))
@@ -560,7 +583,7 @@ if __name__ == "__main__":
             print(safe_console_text(f"\n{freq_error}"))
 
         # 워드 클라우드 이미지를 생성하고 저장
-        word_cloud_path = output_dir / f"clien_today_wordcloud_{date_suffix}.png"
+        word_cloud_path = output_dir / f"clien_wordcloud_{date_suffix}.png"
         default_font_path = Path("C:/Windows/Fonts/malgun.ttf")
         font_path = default_font_path if default_font_path.exists() else None
 
@@ -578,7 +601,7 @@ if __name__ == "__main__":
                 word_cloud_path,
                 TELEGRAM_BOT_TOKEN,
                 TELEGRAM_CHAT_ID,
-                caption=f"Clien today({date_suffix}) top keywords word cloud",
+                caption=f"Clien {date_suffix} top keywords word cloud",
             )
             if sent_wc:
                 print(
@@ -591,4 +614,4 @@ if __name__ == "__main__":
         elif error_message:
             print(safe_console_text(f"\n{error_message}"))
     else:
-        print(safe_console_text("\nNo posts from today were collected."))
+        print(safe_console_text(f"\nNo posts from {target_date.strftime('%Y-%m-%d')} were collected."))
