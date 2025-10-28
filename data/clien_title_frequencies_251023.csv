@@ -1,0 +1,41 @@
+﻿Type,Token,Count
+word,jpg,9
+word,코스피,7
+word,캄보디아,6
+word,서울,5
+word,마라톤,5
+word,트럼프,5
+word,이,4
+word,10,4
+word,영화,4
+word,3,4
+word,미국,4
+word,요즘,4
+word,진짜,4
+word,지금,4
+word,무인점포는,4
+word,결국,3
+word,한국인,3
+word,총책,3
+word,뉴스,3
+word,때문에,3
+bigram,캄보디아 경찰이,2
+bigram,경찰이 배후,2
+bigram,배후 한국인,2
+bigram,한국인 총책,2
+bigram,총책 부부,2
+bigram,부부 성형,2
+bigram,성형 도주,2
+bigram,도주 배경,2
+bigram,이브 i,2
+bigram,i will,2
+bigram,will be,2
+bigram,be there,2
+bigram,이 뉴스,2
+bigram,2025 10,2
+bigram,10 23,2
+bigram,농축 재처리,2
+bigram,받아들여 곧,2
+bigram,코스피 3900이,2
+bigram,3900이 불편한,2
+bigram,불편한 내란잔당들,2

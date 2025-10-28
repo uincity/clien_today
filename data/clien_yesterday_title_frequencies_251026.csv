@@ -1,0 +1,41 @@
+﻿Type,Token,Count
+word,jpg,12
+word,부동산,6
+word,3,6
+word,야구,6
+word,김천,5
+word,왜,5
+word,이제,5
+word,것,5
+word,하는,5
+word,근황,4
+word,트럼프,4
+word,잘,4
+word,오늘,4
+word,캄보디아,4
+word,너무,4
+word,김밥축제,3
+word,이재명,3
+word,대통령,3
+word,출산율,3
+word,보니,3
+bigram,근황 jpg,4
+bigram,김천 김밥축제,3
+bigram,이재명 대통령,2
+bigram,부동산 기획조사,2
+bigram,3 3,2
+bigram,적 없어,2
+bigram,경복궁 사진,2
+bigram,사진 논란에,2
+bigram,적당히 하라,2
+bigram,하라 누가,2
+bigram,야구 야마모토,2
+bigram,꿀뷰가 반디뷰로,1
+bigram,반디뷰로 바뀌었군요,1
+bigram,남편이 엉덩이를,1
+bigram,엉덩이를 벌리고,1
+bigram,벌리고 매일,1
+bigram,매일 다가오는,1
+bigram,다가오는 만화,1
+bigram,만화 manhwa,1
+bigram,manhwa 5,1

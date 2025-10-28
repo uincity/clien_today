@@ -42,7 +42,7 @@ TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "YOUR_TELEGRAM_CHAT_ID_HERE")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "YOUR_GEMINI_API_KEY_HERE")
 
 # 키워드 빈도 분석에서 제외할 불용어 목록
-STOP_WORDS = {"속보", "단독", "합니다", "더", "첫", "수"}
+STOP_WORDS = {"속보", "단독", "합니다", "더", "첫", "수","제","오늘","있다","너무","정말","속보","하는","왜"}
 
 GEMINI_SUMMARY_PROMPT = (
     "다음은 커뮤니티의 주요 이슈 게시물들을 모아놓은 텍스트입니다. "
@@ -462,12 +462,14 @@ if __name__ == "__main__":
         # 파일명 뒤에 날짜(YYMMDD)를 붙여 관리
         yesterday = datetime.now() - timedelta(days=1)
         date_suffix = yesterday.strftime("%y%m%d")
+        
+        # ./data 디렉토리 생성
+        output_dir = Path(__file__).parent / "data"
+        output_dir.mkdir(exist_ok=True)
 
-        output_path = Path(__file__).with_name(
-            f"clien_yesterday_posts_{date_suffix}.csv"
-        )
+        output_path = output_dir / f"clien_yesterday_posts_{date_suffix}.csv"
         save_posts_to_csv(posts, output_path)
-        print(safe_console_text(f"\nSaved CSV to {output_path.resolve()}"))
+        print(safe_console_text(f"\nSaved CSV to {output_path}"))
 
         word_freq, bigram_freq = calculate_title_frequencies(posts)
 
@@ -481,15 +483,13 @@ if __name__ == "__main__":
             matching_posts = [
                 post for post in posts if top_keyword in tokenize_title(post["title"])
             ]
-            issue_file_path = Path(__file__).with_name(
-                f"YESTERDAY_ISSUE_{date_suffix}.txt"
-            )
+            issue_file_path = output_dir / f"YESTERDAY_ISSUE_{date_suffix}.txt"
             if matching_posts:
                 # 필터링된 게시물 본문 저장 후 텔레그램 공유
                 if save_issue_posts(top_keyword, matching_posts, issue_file_path):
                     print(
                         safe_console_text(
-                            f"\nSaved top keyword ('{top_keyword}') posts to {issue_file_path.resolve()}"
+                            f"\nSaved top keyword ('{top_keyword}') posts to {issue_file_path}"
                         )
                     )
                     sent, send_error = send_file_via_telegram(
@@ -512,11 +512,9 @@ if __name__ == "__main__":
                     summary, gemini_error = summarize_text_with_gemini(full_issue_content, GEMINI_API_KEY)
 
                     if summary:
-                        summary_file_path = Path(__file__).with_name(
-                            f"YESTERDAY_SUMMARY_{date_suffix}.txt"
-                        )
+                        summary_file_path = output_dir / f"YESTERDAY_SUMMARY_{date_suffix}.txt"
                         summary_file_path.write_text(summary, encoding="utf-8")
-                        print(safe_console_text(f"\nSaved Gemini summary to {summary_file_path.resolve()}"))
+                        print(safe_console_text(f"\nSaved Gemini summary to {summary_file_path}"))
 
                         # 요약 파일을 텔레그램으로 전송
                         sent_summary, summary_error = send_file_via_telegram(
@@ -555,11 +553,9 @@ if __name__ == "__main__":
             for token, count in bigram_freq:
                 print(safe_console_text(f"{token}: {count}"))
 
-        freq_output_path = Path(__file__).with_name(
-            f"clien_yesterday_title_frequencies_{date_suffix}.csv"
-        )
+        freq_output_path = output_dir / f"clien_yesterday_title_frequencies_{date_suffix}.csv"
         save_title_frequencies_to_csv(word_freq, bigram_freq, freq_output_path)
-        print(safe_console_text(f"\nSaved title frequencies to {freq_output_path.resolve()}"))
+        print(safe_console_text(f"\nSaved title frequencies to {freq_output_path}"))
         # 제목 빈도 CSV를 텔레그램으로 전송
         sent_freq, freq_error = send_file_via_telegram(
             freq_output_path,
@@ -573,15 +569,13 @@ if __name__ == "__main__":
             print(safe_console_text(f"\n{freq_error}"))
 
         # 워드 클라우드 이미지를 생성하고 저장
-        word_cloud_path = Path(__file__).with_name(
-            f"clien_yesterday_wordcloud_{date_suffix}.png"
-        )
+        word_cloud_path = output_dir / f"clien_yesterday_wordcloud_{date_suffix}.png"
         default_font_path = Path("C:/Windows/Fonts/malgun.ttf")
         font_path = default_font_path if default_font_path.exists() else None
 
         success, error_message = generate_word_cloud(word_freq, word_cloud_path, font_path=font_path)
         if success:
-            print(safe_console_text(f"\nSaved word cloud image to {word_cloud_path.resolve()}"))
+            print(safe_console_text(f"\nSaved word cloud image to {word_cloud_path}"))
             if font_path is None:
                 print(
                     safe_console_text(

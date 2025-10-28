@@ -1,0 +1,41 @@
+﻿Type,Token,Count
+word,자기,3
+word,avi,3
+word,국토부,3
+word,차관,3
+word,지금,2
+word,문화유산,2
+word,주장,2
+word,ai,2
+word,사퇴,2
+word,대통령실,2
+word,수용,2
+word,방침,2
+word,jpg,2
+word,수용하면,2
+word,타결,2
+word,다,2
+word,부동산,2
+word,이상경,2
+word,보유세,2
+word,제,2
+bigram,국토부 차관,3
+bigram,차관 사퇴,2
+bigram,대통령실 수용,2
+bigram,수용 방침,2
+bigram,갭투자 논란,2
+bigram,지금 기업은행,1
+bigram,기업은행 앱,1
+bigram,앱 잘,1
+bigram,잘 되시나요,1
+bigram,측 명성황후,1
+bigram,명성황후 침실,1
+bigram,침실 곤녕합,1
+bigram,곤녕합 출입,1
+bigram,출입 논란에,1
+bigram,논란에 문화유산,1
+bigram,문화유산 알리려는,1
+bigram,알리려는 노력폄하,1
+bigram,노력폄하 주장,1
+bigram,미니진이 자기,1
+bigram,자기 기획사를,1

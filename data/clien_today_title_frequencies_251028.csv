@@ -1,0 +1,41 @@
+﻿Type,Token,Count
+word,트럼프,5
+word,오늘,3
+word,예정,2
+word,제,2
+word,있다,2
+word,자녀,2
+word,부동산,2
+word,성장,2
+word,이재명,2
+word,주식,2
+word,수익,2
+word,에,2
+word,또,2
+word,잘,2
+word,대통령,2
+word,apec,1
+word,앞둔,1
+word,미중,1
+word,희토류,1
+word,관세,1
+bigram,주식 수익,2
+bigram,apec 앞둔,1
+bigram,앞둔 미중,1
+bigram,미중 희토류,1
+bigram,희토류 관세,1
+bigram,관세 타결,1
+bigram,밸브 누가,1
+bigram,누가 이래,1
+bigram,이래 돌리는고,1
+bigram,바이럴 아님,1
+bigram,아님 홈플럭스,1
+bigram,홈플럭스 역대급,1
+bigram,역대급 세일,1
+bigram,세일 행사,1
+bigram,행사 예정,1
+bigram,제 일상,1
+bigram,일상 동선이,1
+bigram,동선이 참,1
+bigram,참 거시기합니다,1
+bigram,거시기합니다 한남,1

@@ -1,0 +1,41 @@
+﻿Type,Token,Count
+word,보유세,17
+word,속보,13
+word,부동산,11
+word,왜,7
+word,코스피,7
+word,너무,6
+word,첫,6
+word,돌파,6
+word,트럼프,6
+word,주식,5
+word,사상,5
+word,이유,5
+word,대통령,4
+word,아파트,4
+word,수사,4
+word,것,4
+word,이재명,4
+word,단독,4
+word,이,3
+word,ai,3
+bigram,속보 코스피,5
+bigram,사상 첫,3
+bigram,예상치 못한,2
+bigram,카이스트 총장,2
+bigram,법무부 관봉권,2
+bigram,폐기 쿠팡,2
+bigram,의혹 상설특검,2
+bigram,상설특검 수사,2
+bigram,수사 결정,2
+bigram,관봉권 띠지,2
+bigram,사상 최고치,2
+bigram,코스피 사상,2
+bigram,코스피 장중,2
+bigram,채 상병,2
+bigram,수사 방해,2
+bigram,백악관 트럼프,2
+bigram,29일 부산서,2
+bigram,부산서 이재명,2
+bigram,이재명 대통령과,2
+bigram,대통령과 회담,2

@@ -1,0 +1,41 @@
+﻿Type,Token,Count
+word,코스피,19
+word,트럼프,8
+word,김건희,7
+word,미국,6
+word,전,5
+word,4000,5
+word,중,4
+word,오늘,4
+word,정말,4
+word,너무,4
+word,올랐네요,3
+word,황교안,3
+word,원,3
+word,특검,3
+word,와,3
+word,비밀의,3
+word,방,3
+word,들어갔다,3
+word,대한,3
+word,인터뷰,3
+bigram,코스피 4000,4
+bigram,비밀의 방,3
+bigram,코스피 5000,2
+bigram,갤럭시xr 받았습니다,2
+bigram,김건희 조선왕실유물,2
+bigram,조선왕실유물 보관된,2
+bigram,보관된 비밀의,2
+bigram,방 수장고도,2
+bigram,수장고도 들어갔다,2
+bigram,들어갔다 출입자,2
+bigram,이 대통령,2
+bigram,트럼프 조지아,2
+bigram,매우 반대했다,2
+bigram,코스피 4000돌파,2
+bigram,이태원 3주기,2
+bigram,미국 대선,2
+bigram,국감서 검찰들,1
+bigram,검찰들 태도,1
+bigram,태도 보셨나요,1
+bigram,츄의 츠키,1

@@ -1,0 +1,41 @@
+﻿Type,Token,Count
+word,코스피,15
+word,단독,7
+word,미국,6
+word,김건희,6
+word,속보,6
+word,너무,4
+word,4000,4
+word,정말,3
+word,중,3
+word,비밀의,3
+word,방,3
+word,들어갔다,3
+word,전,3
+word,주식,3
+word,예정,3
+word,미,3
+word,도,3
+word,대한민국,3
+word,수,2
+word,11월,2
+bigram,단독 김건희,5
+bigram,비밀의 방,3
+bigram,코스피 4000,3
+bigram,코스피 4000돌파,2
+bigram,속보 코스피,2
+bigram,이태원 3주기,2
+bigram,김건희 조선왕실,2
+bigram,조선왕실 비밀의,2
+bigram,방 도,2
+bigram,도 들어갔다,2
+bigram,미국 대선,2
+bigram,주가 지수,1
+bigram,지수 상승을,1
+bigram,상승을 숫자로만,1
+bigram,숫자로만 보면,1
+bigram,보면 무서울,1
+bigram,무서울 수,1
+bigram,수 있겠지만,1
+bigram,미적분학 랩소디라는데요,1
+bigram,한캄 정상회담,1

@@ -1,0 +1,41 @@
+﻿Type,Token,Count
+word,부동산,10
+word,삼성,9
+word,트럼프,6
+word,중,5
+word,야구,5
+word,jpg,5
+word,오늘,5
+word,3,5
+word,캄보디아,5
+word,vs,5
+word,xr,5
+word,김건희,4
+word,gisa,4
+word,하네요,4
+word,대통령,4
+word,이제,4
+word,예정,4
+word,어제,4
+word,대한,4
+word,중국,4
+bigram,이재명 대통령,2
+bigram,대학생 살해,2
+bigram,살해 주범은,2
+bigram,주범은 강남,2
+bigram,정재욱 이정재,2
+bigram,트럼프 관세,2
+bigram,관세 덕에,2
+bigram,덕에 한국과,2
+bigram,한국과 협상,2
+bigram,협상 잘해,2
+bigram,잘해 3,2
+bigram,3 500억,2
+bigram,500억 달러,2
+bigram,달러 받았다,2
+bigram,갤럭시 xr,2
+bigram,필요할 때만,2
+bigram,장영하 변호사,2
+bigram,변호사 2심서,2
+bigram,2심서 유죄로,2
+bigram,유죄로 뒤집혀,2
